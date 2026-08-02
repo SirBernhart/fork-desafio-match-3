@@ -896,7 +896,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.Controllers.ScoreController
   _scoreView: {fileID: 811864381}
-  _sequenceSizeMultiplier: 0
+  _sequenceSizePowerToElevate: 2
+  _baseTileScoreValue: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
