@@ -117,7 +117,7 @@ namespace Gazeus.DesafioMatch3.Views
             return sequence;
         }
 
-        public Tween SwapTiles(int fromX, int fromY, int toX, int toY)
+        public Tween TrySwapTiles(int fromX, int fromY, int toX, int toY)
         {
             Sequence sequence = DOTween.Sequence();
             sequence.Append(_tileSpots[fromY][fromX].AnimatedSetTile(_tiles[toY][toX]));

@@ -78,17 +78,16 @@ namespace Gazeus.DesafioMatch3.Controllers
                 else
                 {
                     _isAnimating = true;
-                    _boardView.SwapTiles(_selectedX, _selectedY, x, y).onComplete += () =>
+                    _boardView.TrySwapTiles(_selectedX, _selectedY, x, y).onComplete += () =>
                     {
-                        bool isValid = _gameService.IsValidMovement(_selectedX, _selectedY, x, y);
-                        if (isValid)
+                        List<BoardSequence> swapResult = _gameService.SwapTile(_selectedX, _selectedY, x, y);
+                        if (swapResult.Count > 0)
                         {
-                            List<BoardSequence> swapResult = _gameService.SwapTile(_selectedX, _selectedY, x, y);
                             AnimateBoard(swapResult, 0, () => _isAnimating = false);
                         }
                         else
                         {
-                            _boardView.SwapTiles(x, y, _selectedX, _selectedY).onComplete += () => _isAnimating = false;
+                            _boardView.TrySwapTiles(x, y, _selectedX, _selectedY).onComplete += () => _isAnimating = false;
                         }
                         _selectedX = -1;
                         _selectedY = -1;
