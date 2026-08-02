@@ -7,7 +7,8 @@ namespace Gazeus.DesafioMatch3.Controllers
     public class ScoreController : MonoBehaviour
     {
         [SerializeField] private ScoreView _scoreView;
-        [SerializeField] private float _sequenceSizeMultiplier;
+        [SerializeField] private float _sequenceSizePowerToElevate = 2;
+        [SerializeField] private float _baseTileScoreValue = 5;
         
         private ScoreModel _scoreModel;
 
@@ -20,7 +21,9 @@ namespace Gazeus.DesafioMatch3.Controllers
 
         public void HandleTilesDestroyed(int destroyedTiles)
         {
-            _scoreModel.IncreaseScore(destroyedTiles * 5);
+            float sequenceSizeMultiplier = Mathf.Pow(destroyedTiles, _sequenceSizePowerToElevate);
+            int scoreToIncrease = Mathf.CeilToInt(sequenceSizeMultiplier * _baseTileScoreValue);
+            _scoreModel.IncreaseScore(scoreToIncrease);
         }
         
         private void OnScoreChanged(int previousScore, int newScore)
