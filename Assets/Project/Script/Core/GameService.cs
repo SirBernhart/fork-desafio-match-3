@@ -54,7 +54,7 @@ namespace Gazeus.DesafioMatch3.Core
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
             List<BoardSequence> boardSequences = new();
-            List<List<bool>> matchedTiles = FindMatches(newBoard);
+            List<List<bool>> matchedTiles = FindAllTilesToBeDestroyed(newBoard);
 
             while (HasMatch(matchedTiles))
             {
@@ -140,7 +140,7 @@ namespace Gazeus.DesafioMatch3.Core
                     AddedTiles = addedTiles
                 };
                 boardSequences.Add(sequence);
-                matchedTiles = FindMatches(newBoard);
+                matchedTiles = FindAllTilesToBeDestroyed(newBoard);
             }
 
             _boardTiles = newBoard;
@@ -207,7 +207,13 @@ namespace Gazeus.DesafioMatch3.Core
             return board;
         }
 
-        private static List<List<bool>> FindMatches(List<List<Tile>> newBoard)
+        /// <summary>
+        /// Sets all the coordinates that have tiles to be destroyed as true. This includes normal
+        /// matching and bonus effects (line-clearer, explosions etc)
+        /// </summary>
+        /// <param name="newBoard">"The board to have the coordinates marked"</param>
+        /// <returns></returns>
+        private static List<List<bool>> FindAllTilesToBeDestroyed(List<List<Tile>> newBoard)
         {
             List<List<bool>> matchedTiles = new();
             for (int y = 0; y < newBoard.Count; y++)
@@ -221,29 +227,58 @@ namespace Gazeus.DesafioMatch3.Core
 
             for (int y = 0; y < newBoard.Count; y++)
             {
+                bool lineHasBeenCleared = false;
                 for (int x = 0; x < newBoard[y].Count; x++)
                 {
-                    if (x > 1 &&
+                    if (!lineHasBeenCleared &&
+                        x >= 2 &&
                         newBoard[y][x].Type == newBoard[y][x - 1].Type &&
                         newBoard[y][x - 1].Type == newBoard[y][x - 2].Type)
                     {
                         matchedTiles[y][x] = true;
                         matchedTiles[y][x - 1] = true;
                         matchedTiles[y][x - 2] = true;
+                        if (x >= 3 &&
+                            newBoard[y][x - 2].Type == newBoard[y][x - 3].Type)
+                        {
+                            SetWholeLineToBeCleared(matchedTiles[y]);
+                            lineHasBeenCleared = true;
+                        }
                     }
 
-                    if (y > 1 &&
+                    if (y >= 2 &&
                         newBoard[y][x].Type == newBoard[y - 1][x].Type &&
                         newBoard[y - 1][x].Type == newBoard[y - 2][x].Type)
                     {
                         matchedTiles[y][x] = true;
                         matchedTiles[y - 1][x] = true;
                         matchedTiles[y - 2][x] = true;
+                        if (y >= 3 &&
+                            newBoard[y - 2][x].Type == newBoard[y - 3][x].Type)
+                        {
+                            SetWholeColumnToBeCleared(x);
+                        }
                     }
                 }
             }
 
             return matchedTiles;
+
+            void SetWholeLineToBeCleared(List<bool> lineToBeCleared)
+            {
+                for(int x = 0; x < lineToBeCleared.Count; x++)
+                {
+                    lineToBeCleared[x] = true;
+                }
+            }
+
+            void SetWholeColumnToBeCleared(int columnToBeClearedNumber)
+            {
+                for (int y = 0; y < matchedTiles.Count; y++)
+                {
+                    matchedTiles[y][columnToBeClearedNumber] = true;
+                }
+            }
         }
 
         private static bool HasMatch(List<List<bool>> list)
