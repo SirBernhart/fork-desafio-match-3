@@ -20,16 +20,9 @@ namespace Gazeus.DesafioMatch3.Core
             {
                 for (int x = 0; x < newBoard[y].Count; x++)
                 {
-                    if (x > 1 &&
-                        newBoard[y][x].Type == newBoard[y][x - 1].Type &&
-                        newBoard[y][x - 1].Type == newBoard[y][x - 2].Type)
-                    {
-                        return true;
-                    }
-
-                    if (y > 1 &&
-                        newBoard[y][x].Type == newBoard[y - 1][x].Type &&
-                        newBoard[y - 1][x].Type == newBoard[y - 2][x].Type)
+                    if (CanMatchLine(x, y, newBoard) ||
+                        CanMatchColumn(x, y, newBoard) ||
+                        CanMatchSquare(x, y, newBoard))
                     {
                         return true;
                     }
@@ -37,6 +30,28 @@ namespace Gazeus.DesafioMatch3.Core
             }
 
             return false;
+        }
+
+        private static bool CanMatchLine(int x, int y, List<List<Tile>> newBoard)
+        {
+            return x > 1 &&
+                   newBoard[y][x].Type == newBoard[y][x - 1].Type &&
+                   newBoard[y][x - 1].Type == newBoard[y][x - 2].Type;
+        }
+
+        private static bool CanMatchColumn(int x, int y, List<List<Tile>> newBoard)
+        {
+            return y > 1 &&
+                   newBoard[y][x].Type == newBoard[y - 1][x].Type &&
+                   newBoard[y - 1][x].Type == newBoard[y - 2][x].Type;
+        }
+
+        private static bool CanMatchSquare(int x, int y, List<List<Tile>> newBoard)
+        {
+            return y >= 1 && x >= 1 &&
+                   newBoard[y][x].Type == newBoard[y - 1][x].Type &&
+                   newBoard[y][x].Type == newBoard[y][x - 1].Type &&
+                   newBoard[y][x].Type == newBoard[y - 1][x - 1].Type;
         }
 
         public List<List<Tile>> StartGame(int boardWidth, int boardHeight)
@@ -227,56 +242,69 @@ namespace Gazeus.DesafioMatch3.Core
 
             for (int y = 0; y < newBoard.Count; y++)
             {
-                bool lineHasBeenCleared = false;
                 for (int x = 0; x < newBoard[y].Count; x++)
                 {
-                    if (!lineHasBeenCleared &&
-                        x >= 2 &&
-                        newBoard[y][x].Type == newBoard[y][x - 1].Type &&
-                        newBoard[y][x - 1].Type == newBoard[y][x - 2].Type)
-                    {
-                        matchedTiles[y][x] = true;
-                        matchedTiles[y][x - 1] = true;
-                        matchedTiles[y][x - 2] = true;
-                        if (x >= 3 &&
-                            newBoard[y][x - 2].Type == newBoard[y][x - 3].Type)
-                        {
-                            SetWholeLineToBeCleared(matchedTiles[y]);
-                            lineHasBeenCleared = true;
-                        }
-                    }
-
-                    if (y >= 2 &&
-                        newBoard[y][x].Type == newBoard[y - 1][x].Type &&
-                        newBoard[y - 1][x].Type == newBoard[y - 2][x].Type)
-                    {
-                        matchedTiles[y][x] = true;
-                        matchedTiles[y - 1][x] = true;
-                        matchedTiles[y - 2][x] = true;
-                        if (y >= 3 &&
-                            newBoard[y - 2][x].Type == newBoard[y - 3][x].Type)
-                        {
-                            SetWholeColumnToBeCleared(x);
-                        }
-                    }
+                    FindMatchesInLine(x, y);
+                    FindMatchesInColumn(x, y);
+                    FindMatchesInSquare(x, y);
                 }
             }
 
             return matchedTiles;
 
-            void SetWholeLineToBeCleared(List<bool> lineToBeCleared)
+            void FindMatchesInLine(int x, int y)
             {
-                for(int x = 0; x < lineToBeCleared.Count; x++)
+                if (CanMatchLine(x, y, newBoard))
                 {
-                    lineToBeCleared[x] = true;
+                    matchedTiles[y][x] = true;
+                    matchedTiles[y][x - 1] = true;
+                    matchedTiles[y][x - 2] = true;
+                    if (x >= 3 &&
+                        newBoard[y][x - 2].Type == newBoard[y][x - 3].Type)
+                    {
+                        SetWholeLineToBeCleared(matchedTiles[y]);
+                    }
+                }
+                
+                void SetWholeLineToBeCleared(List<bool> lineToBeCleared)
+                {
+                    for(int x = 0; x < lineToBeCleared.Count; x++)
+                    {
+                        lineToBeCleared[x] = true;
+                    }
                 }
             }
 
-            void SetWholeColumnToBeCleared(int columnToBeClearedNumber)
+            void FindMatchesInColumn(int x, int y)
             {
-                for (int y = 0; y < matchedTiles.Count; y++)
+                if (CanMatchColumn(x, y, newBoard))
                 {
-                    matchedTiles[y][columnToBeClearedNumber] = true;
+                    matchedTiles[y][x] = true;
+                    matchedTiles[y - 1][x] = true;
+                    matchedTiles[y - 2][x] = true;
+                    if (y >= 3 &&
+                        newBoard[y - 2][x].Type == newBoard[y - 3][x].Type)
+                    {
+                        SetWholeColumnToBeCleared(x);
+                    }
+                }
+                void SetWholeColumnToBeCleared(int columnToBeClearedNumber)
+                {
+                    for (int y = 0; y < matchedTiles.Count; y++)
+                    {
+                        matchedTiles[y][columnToBeClearedNumber] = true;
+                    }
+                }
+            }
+            
+            void FindMatchesInSquare(int x, int y)
+            {
+                if (CanMatchSquare(x, y, newBoard))
+                {
+                    matchedTiles[y][x] = true;
+                    matchedTiles[y - 1][x] = true;
+                    matchedTiles[y][x - 1] = true;
+                    matchedTiles[y - 1][x-1] = true;
                 }
             }
         }
