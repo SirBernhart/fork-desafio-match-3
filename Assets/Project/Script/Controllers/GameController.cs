@@ -13,6 +13,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         [SerializeField] private BoardView _boardView;
         [SerializeField] private int _boardHeight = 10;
         [SerializeField] private int _boardWidth = 10;
+        [SerializeField] private ScoreController _scoreController;
 
         private GameService _gameService;
         private bool _isAnimating;
@@ -43,7 +44,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             BoardSequence boardSequence = boardSequences[index];
 
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_boardView.DestroyTiles(boardSequence.MatchedPosition));
+            sequence.Append(_boardView.DestroyTiles(boardSequence.MatchedPosition).OnComplete(OnTilesDestroyed));
             sequence.Append(_boardView.MoveTiles(boardSequence.MovedTiles));
             sequence.Append(_boardView.CreateTile(boardSequence.AddedTiles));
 
@@ -55,6 +56,11 @@ namespace Gazeus.DesafioMatch3.Controllers
             else
             {
                 sequence.onComplete += () => onComplete();
+            }
+
+            void OnTilesDestroyed()
+            {
+                _scoreController.HandleTilesDestroyed(boardSequence.MatchedPosition.Count);
             }
         }
 
