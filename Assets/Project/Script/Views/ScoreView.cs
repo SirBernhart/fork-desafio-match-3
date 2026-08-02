@@ -1,4 +1,6 @@
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +10,8 @@ namespace Gazeus.DesafioMatch3.Views
     {
         [SerializeField] private Text _scoreText;
 
+        private TweenerCore<int, int, NoOptions> _currentTween;
+
         public void Setup(int startingScore)
         {
             _scoreText.text = startingScore.ToString();
@@ -15,13 +19,16 @@ namespace Gazeus.DesafioMatch3.Views
         
         public void UpdateScoreView(int previousScore, int newScore)
         {
-            int currentAnimatedScore = previousScore;
-            DOTween.To(() => currentAnimatedScore, IncreaseScoreAndUpdateText, newScore, 0.2f);
-
-            void IncreaseScoreAndUpdateText(int currentScoreValue)
+            if (_currentTween != null)
             {
-                currentAnimatedScore += currentScoreValue;
-                _scoreText.text = currentAnimatedScore.ToString();
+                _currentTween.Complete();
+            }
+            
+            _currentTween = DOTween.To(() => previousScore, IncreaseScoreText, newScore, 0.2f);
+
+            void IncreaseScoreText(int currentScoreValue)
+            {
+                _scoreText.text = currentScoreValue.ToString();
             }
         }
     }
