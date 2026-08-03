@@ -1,0 +1,11 @@
+using System.Collections.Generic;
+using Gazeus.DesafioMatch3.Models;
+
+namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
+{
+    public interface IMatchPatternStrategy
+    {
+        List<List<bool>> FindMatches(List<List<Tile>> newBoard, List<List<bool>> matchedTiles);
+        int Priority { get; }
+    }
+}
