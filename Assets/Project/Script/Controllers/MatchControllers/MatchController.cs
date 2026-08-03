@@ -16,7 +16,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             _matchPatternStrategies = new List<IMatchPatternStrategy>
             {
                 // TODO: Add other strategies
-                new LineMatchPatternStrategyStrategy()
+                new LineMatchPatternStrategy()
             }.OrderByDescending(p => p.Priority).ToList();
         }
 

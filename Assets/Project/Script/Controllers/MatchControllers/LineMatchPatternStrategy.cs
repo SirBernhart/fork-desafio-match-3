@@ -3,7 +3,7 @@ using Gazeus.DesafioMatch3.Models;
 
 namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
 {
-    public class LineMatchPatternStrategyStrategy : IMatchPatternStrategy
+    public class LineMatchPatternStrategy : IMatchPatternStrategy
     {
         public int Priority => 1;
         
@@ -31,10 +31,10 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                 if (x >= 3 &&
                     newBoard[y][x - 2].Type == newBoard[y][x - 3].Type)
                 {
-                    if (false/*x >= 4 &&
-                        newBoard[y][x - 3].Type == newBoard[y][x - 4].Type*/)
+                    if (x >= 4 &&
+                        newBoard[y][x - 3].Type == newBoard[y][x - 4].Type)
                     {
-                        // Destroy all of same color
+                        SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
                     }
                     else
                     {
@@ -44,7 +44,7 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
             }
         }
         
-        void SetWholeLineToBeCleared(List<bool> lineToBeCleared)
+        private void SetWholeLineToBeCleared(List<bool> lineToBeCleared)
         {
             for(int x = 0; x < lineToBeCleared.Count; x++)
             {
@@ -66,7 +66,7 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                    newBoard[y - 1][x].Type == newBoard[y - 2][x].Type;
         }
         
-        void FindMatchesInColumn(int x, int y, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        private void FindMatchesInColumn(int x, int y, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
         {
             if (CanMatchColumn(x, y, newBoard))
             {
@@ -76,10 +76,10 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                 if (y >= 3 &&
                     newBoard[y - 2][x].Type == newBoard[y - 3][x].Type)
                 {
-                    if (/*x >= 4 &&
-                        newBoard[y - 3][x].Type == newBoard[y - 4][x].Type*/false)
+                    if (y >= 4 &&
+                        newBoard[y - 3][x].Type == newBoard[y - 4][x].Type)
                     {
-                        // Destroy all of same color
+                        SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
                     }
                     else
                     {
@@ -87,22 +87,23 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     }
                 }
             }
-            void SetWholeColumnToBeCleared(int columnToBeClearedNumber, List<List<bool>> matchedTiles)
+        }
+        
+        private void SetWholeColumnToBeCleared(int columnToBeClearedNumber, List<List<bool>> matchedTiles)
+        {
+            for (int y = 0; y < matchedTiles.Count; y++)
             {
-                for (int y = 0; y < matchedTiles.Count; y++)
-                {
-                    matchedTiles[y][columnToBeClearedNumber] = true;
-                }
+                matchedTiles[y][columnToBeClearedNumber] = true;
             }
         }
 
-        void SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        private void SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
         {
             for (int y = 0; y < newBoard.Count; y++)
             {
                 for (int x = 0; x < newBoard[y].Count; x++)
                 {
-                    if (newBoard[y][x].Type == type)
+                    if (newBoard[y][x].Type == type && !matchedTiles[y][x])
                     {
                         matchedTiles[y][x] = true;
                     }
