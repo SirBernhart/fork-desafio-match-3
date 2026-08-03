@@ -14,6 +14,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         [SerializeField] private int _boardHeight = 10;
         [SerializeField] private int _boardWidth = 10;
         [SerializeField] private ScoreController _scoreController;
+        [SerializeField] private MatchController _matchController;
 
         private GameService _gameService;
         private bool _isAnimating;
@@ -34,7 +35,7 @@ namespace Gazeus.DesafioMatch3.Controllers
 
         private void Start()
         {
-            List<List<Tile>> board = _gameService.StartGame(_boardWidth, _boardHeight);
+            List<List<Tile>> board = _gameService.StartGame(_boardWidth, _boardHeight, _matchController);
             _boardView.CreateBoard(board);
         }
         #endregion

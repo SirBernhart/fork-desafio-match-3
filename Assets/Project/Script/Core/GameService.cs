@@ -7,35 +7,16 @@ namespace Gazeus.DesafioMatch3.Core
 {
     public class GameService
     {
+        private MatchController _matchController;
         private List<List<Tile>> _boardTiles;
         private List<int> _tilesTypes;
         private int _tileCount;
 
-        public bool IsValidMovement(int fromX, int fromY, int toX, int toY)
-        {
-            List<List<Tile>> newBoard = CopyBoard(_boardTiles);
-
-            (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
-
-            for (int y = 0; y < newBoard.Count; y++)
-            {
-                for (int x = 0; x < newBoard[y].Count; x++)
-                {
-                    if (MatchController.CanMatchLine(x, y, newBoard) ||
-                        MatchController.CanMatchColumn(x, y, newBoard))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public List<List<Tile>> StartGame(int boardWidth, int boardHeight)
+        public List<List<Tile>> StartGame(int boardWidth, int boardHeight, MatchController matchController)
         {
             _tilesTypes = new List<int> { 0, 1, 2, 3 };
             _boardTiles = CreateBoard(boardWidth, boardHeight, _tilesTypes);
+            _matchController = matchController;
 
             return _boardTiles;
         }
@@ -47,7 +28,7 @@ namespace Gazeus.DesafioMatch3.Core
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
             List<BoardSequence> boardSequences = new();
-            List<List<bool>> matchedTiles = MatchController.FindAllTilesToBeDestroyed(newBoard);
+            List<List<bool>> matchedTiles = _matchController.FindAllTilesToBeDestroyed(newBoard);
 
             while (HasMatch(matchedTiles))
             {
@@ -133,7 +114,7 @@ namespace Gazeus.DesafioMatch3.Core
                     AddedTiles = addedTiles
                 };
                 boardSequences.Add(sequence);
-                matchedTiles = MatchController.FindAllTilesToBeDestroyed(newBoard);
+                matchedTiles = _matchController.FindAllTilesToBeDestroyed(newBoard);
             }
 
             _boardTiles = newBoard;
