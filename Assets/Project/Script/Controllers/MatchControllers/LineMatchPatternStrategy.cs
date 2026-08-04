@@ -34,9 +34,17 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     if (x >= 4 &&
                         newBoard[y][x - 3].Type == newBoard[y][x - 4].Type)
                     {
-                        SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
+                        if (x >= 5 &&
+                            newBoard[y][x - 4].Type == newBoard[y][x - 5].Type) // Could match 6
+                        {
+                            SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
+                        }
+                        else // Could match 5
+                        {
+                            SetExplosion(x-2, y, newBoard, matchedTiles);
+                        }
                     }
-                    else
+                    else // Could match 4
                     {
                         SetWholeLineToBeCleared(matchedTiles[y]);
                     }
@@ -79,7 +87,15 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     if (y >= 4 &&
                         newBoard[y - 3][x].Type == newBoard[y - 4][x].Type)
                     {
-                        SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
+                        if (y >= 5 &&
+                            newBoard[y - 4][x].Type == newBoard[y - 5][x].Type)
+                        {
+                            SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
+                        }
+                        else
+                        {
+                            SetExplosion(x, y-2, newBoard, matchedTiles);
+                        }
                     }
                     else
                     {
@@ -94,6 +110,49 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
             for (int y = 0; y < matchedTiles.Count; y++)
             {
                 matchedTiles[y][columnToBeClearedNumber] = true;
+            }
+        }
+
+        /// <summary>
+        /// Sets tiles to be destroyed in a diamond shape, with the middle tile of the 5-matched line as it's center
+        /// </summary>
+        /// <param name="xCenter">center's x coordinate</param>
+        /// <param name="yCenter">center's y coordinate</param>
+        private void SetExplosion(int xCenter, int yCenter, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        {
+            int maxYDelta = 3;
+            for (int yHeightDelta = 0; yHeightDelta < maxYDelta; yHeightDelta++)
+            {
+                int currYAbove = yCenter - yHeightDelta;
+                int currYBelow = yCenter + yHeightDelta;
+                int currLineMaxXDelta = maxYDelta - yHeightDelta;
+                for (int currXDelta = 0; currXDelta < currLineMaxXDelta; currXDelta++)
+                {
+                    int currXToLeft = xCenter - currXDelta;
+                    int currXToRight = xCenter + currXDelta;
+                    if (currYAbove >= 0)
+                    {
+                        SetTilesInCurrXDelta(currXToLeft, currXToRight, currYAbove);
+                    }
+
+                    if (currYBelow < newBoard.Count)
+                    {
+                        SetTilesInCurrXDelta(currXToLeft, currXToRight, currYBelow);
+                    }
+                }
+            }
+
+            void SetTilesInCurrXDelta(int currXToLeft, int currXToRight, int currY)
+            {
+                if (currXToLeft >= 0)
+                {
+                    matchedTiles[currY][currXToLeft] = true;
+                }
+
+                if (currXToRight < newBoard[currY].Count)
+                {
+                    matchedTiles[currY][currXToRight] = true;
+                }
             }
         }
 
