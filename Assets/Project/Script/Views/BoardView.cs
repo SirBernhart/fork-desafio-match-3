@@ -77,14 +77,19 @@ namespace Gazeus.DesafioMatch3.Views
 
         public Tween DestroyTiles(List<Vector2Int> matchedPosition)
         {
+            Sequence sequence = DOTween.Sequence();
             for (int i = 0; i < matchedPosition.Count; i++)
             {
                 Vector2Int position = matchedPosition[i];
-                Destroy(_tiles[position.y][position.x]);
+                GameObject tile = _tiles[position.y][position.x];
+                sequence.Join(tile.transform.DOScale(0.5f, 0.1f).SetEase(Ease.OutCubic)
+                    .OnComplete(()=> tile.transform.DOScale(1.3f, 0.1f).SetEase(Ease.OutCubic)
+                        .OnComplete(() => Destroy(tile))));
                 _tiles[position.y][position.x] = null;
             }
 
-            return DOVirtual.DelayedCall(0.2f, () => { });
+            sequence.Append(DOVirtual.DelayedCall(0.2f, () => { }));
+            return sequence;
         }
 
         public Tween MoveTiles(List<MovedTileInfo> movedTiles)
