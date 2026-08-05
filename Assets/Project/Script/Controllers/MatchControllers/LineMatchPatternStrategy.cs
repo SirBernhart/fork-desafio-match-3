@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
+using UnityEngine;
 
 namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
 {
@@ -7,65 +9,144 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
     {
         public int Priority => 1;
         
-        public List<List<bool>> FindMatches(List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        public List<MatchModel> FindMatches(List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
         {
+            List<MatchModel> matches = new ();
+            // Check all horizontal lines
             for (int y = 0; y < newBoard.Count; y++)
             {
-                for (int x = 0; x < newBoard[y].Count; x++)
-                {
-                    FindMatchesInLine(x, y, newBoard, matchedTiles);
-                    FindMatchesInColumn(x, y, newBoard, matchedTiles);
-                }
+                matches.AddRange(FindMatchesInLine(y, true, newBoard));
+            }
+            
+            // Check all vertical lines
+            for (int x = 0; x < newBoard[0].Count; x++)
+            {
+                matches.AddRange(FindMatchesInLine(x, false, newBoard));
             }
 
+            return matches;
+        }
+
+        private List<MatchModel> FindMatchesInLine(int fixedCoordinateValue, bool isHorizontalLine, List<List<Tile>> newBoard)
+        {
+            List<MatchModel> matchModels = new();
+
+            int matchSequenceSize = 1;
+            for (int i = 0; LineHasNotEnded(i); i++)
+            {
+                // Match is still increasing
+                if (!MatchSequenceHasEnded(i))
+                {
+                    matchSequenceSize++;
+                    continue;
+                }
+                // Match sequence ended, but doesn't meet the minimum requirement to break tiles
+                if (matchSequenceSize < 3)
+                {
+                    matchSequenceSize = 1;
+                    continue;
+                }
+                
+                MatchModel matchModel = new()
+                {
+                    Shape = isHorizontalLine ? MatchShape.HorizontalLine : MatchShape.VerticalLine
+                };
+                
+                int matchSequenceSizeZeroBased = matchSequenceSize - 1;
+                int startingIndex = i - matchSequenceSizeZeroBased;
+                List<Vector2Int> matchedTileCoordinates = 
+                    SetLineMatch(matchSequenceSize, startingIndex, fixedCoordinateValue, isHorizontalLine);
+                matchModel.MatchedTiles = matchedTileCoordinates;
+                matchModel.MatchBonusType = MatchBonusType.None;
+                /*switch (matchSequenceSize)
+                {
+                    case 3:
+                        break;
+                    case 4:
+                        //SetWholeLineToBeCleared(matchedTiles[fixedCoordinateValue]);
+                        break;
+                    case 5:
+                        //SetExplosion(x-2, y, newBoard, matchedTiles);
+                        break;
+                    case 6:
+                        //SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
+                        break;
+                }*/
+                matchModel.CenterPosition = matchModel.MatchedTiles[matchModel.MatchedTiles.Count/2];
+                matchModels.Add(matchModel);
+                
+                matchSequenceSize = 1;
+            }
+            
+            return matchModels;
+
+            bool LineHasNotEnded(int currIndex)
+            {
+                return isHorizontalLine 
+                    ? currIndex < newBoard[fixedCoordinateValue].Count
+                    : currIndex < newBoard.Count;
+            }
+
+            bool MatchSequenceHasEnded(int currIndex)
+            {
+                int currTileType;
+                int nextTileType;
+                if (isHorizontalLine)
+                {
+                    if (currIndex >= newBoard[fixedCoordinateValue].Count - 1)
+                    {
+                        return true;
+                    }
+                    currTileType = newBoard[fixedCoordinateValue][currIndex].Type;
+                    nextTileType = newBoard[fixedCoordinateValue][currIndex + 1].Type;
+                }
+                else
+                {
+                    if (currIndex >= newBoard.Count - 1)
+                    {
+                        return true;
+                    }
+                    
+                    currTileType = newBoard[currIndex][fixedCoordinateValue].Type;
+                    nextTileType = newBoard[currIndex + 1][fixedCoordinateValue].Type;
+                }
+
+                return currTileType != nextTileType;
+            }
+        }
+
+        private List<Vector2Int> SetLineMatch(int matchSize, int startingIndex, int fixedCoordinateValue, bool isHorizontalLine)
+        {
+            List<Vector2Int> matchedTiles = new List<Vector2Int>();
+            int lastIndex = startingIndex + matchSize;
+            for (int movingCoordinateValue = startingIndex;
+                 movingCoordinateValue < lastIndex;
+                 movingCoordinateValue++)
+            {
+                if (isHorizontalLine)
+                {
+                    matchedTiles.Add(new Vector2Int(movingCoordinateValue, fixedCoordinateValue));
+                }
+                else
+                {
+                    matchedTiles.Add(new Vector2Int(fixedCoordinateValue, movingCoordinateValue));
+                }
+            }
+            
             return matchedTiles;
         }
-
-        private void FindMatchesInLine(int x, int y, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
-        {
-            if (CanMatchLine(x, y, newBoard))
-            {
-                matchedTiles[y][x] = true;
-                matchedTiles[y][x - 1] = true;
-                matchedTiles[y][x - 2] = true;
-                if (x >= 3 &&
-                    newBoard[y][x - 2].Type == newBoard[y][x - 3].Type)
-                {
-                    if (x >= 4 &&
-                        newBoard[y][x - 3].Type == newBoard[y][x - 4].Type)
-                    {
-                        if (x >= 5 &&
-                            newBoard[y][x - 4].Type == newBoard[y][x - 5].Type) // Could match 6
-                        {
-                            SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
-                        }
-                        else // Could match 5
-                        {
-                            SetExplosion(x-2, y, newBoard, matchedTiles);
-                        }
-                    }
-                    else // Could match 4
-                    {
-                        SetWholeLineToBeCleared(matchedTiles[y]);
-                    }
-                }
-            }
-        }
         
-        private void SetWholeLineToBeCleared(List<bool> lineToBeCleared)
+        private List<Vector2Int> SetWholeLineToBeCleared(List<bool> lineToBeCleared)
         {
             for(int x = 0; x < lineToBeCleared.Count; x++)
             {
                 lineToBeCleared[x] = true;
             }
+
+            return null;
         }
         
-        public static bool CanMatchLine(int x, int y, List<List<Tile>> newBoard)
-        {
-            return x > 1 &&
-                   newBoard[y][x].Type == newBoard[y][x - 1].Type &&
-                   newBoard[y][x - 1].Type == newBoard[y][x - 2].Type;
-        }
+        
 
         public static bool CanMatchColumn(int x, int y, List<List<Tile>> newBoard)
         {
@@ -118,7 +199,7 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
         /// </summary>
         /// <param name="xCenter">center's x coordinate</param>
         /// <param name="yCenter">center's y coordinate</param>
-        private void SetExplosion(int xCenter, int yCenter, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        private List<Vector2Int> SetExplosion(int xCenter, int yCenter, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
         {
             int maxYDelta = 3;
             for (int yHeightDelta = 0; yHeightDelta < maxYDelta; yHeightDelta++)
@@ -154,9 +235,11 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     matchedTiles[currY][currXToRight] = true;
                 }
             }
+
+            return null;
         }
 
-        private void SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        private List<Vector2Int> SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
         {
             for (int y = 0; y < newBoard.Count; y++)
             {
@@ -168,7 +251,7 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     }
                 }
             }
+            return null;
         }
-
     }
 }

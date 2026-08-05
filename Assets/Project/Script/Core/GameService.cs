@@ -28,31 +28,28 @@ namespace Gazeus.DesafioMatch3.Core
             (newBoard[toY][toX], newBoard[fromY][fromX]) = (newBoard[fromY][fromX], newBoard[toY][toX]);
 
             List<BoardSequence> boardSequences = new();
-            List<List<bool>> matchedTiles = _matchController.FindAllTilesToBeDestroyed(newBoard);
+            List<MatchModel> matchesMade = _matchController.FindAllTilesToBeDestroyed(newBoard);
 
-            while (HasMatch(matchedTiles))
+            while (matchesMade.Count > 0)
             {
-                //Cleaning the matched tiles
-                List<Vector2Int> matchedPosition = new();
-                for (int y = 0; y < newBoard.Count; y++)
+                List<Vector2Int> allMatchedPositions = new();
+                foreach (MatchModel match in matchesMade)
                 {
-                    for (int x = 0; x < newBoard[y].Count; x++)
+                    //Clearing board of matched tiles
+                    foreach (Vector2Int matchedTile in match.MatchedTiles)
                     {
-                        if (matchedTiles[y][x])
-                        {
-                            matchedPosition.Add(new Vector2Int(x, y));
-                            newBoard[y][x] = new Tile { Id = -1, Type = -1 };
-                        }
+                        allMatchedPositions.Add(matchedTile);
+                        newBoard[matchedTile.y][matchedTile.x] = new Tile { Id = -1, Type = -1 };
                     }
                 }
 
                 // Dropping the tiles
                 Dictionary<int, MovedTileInfo> movedTiles = new();
                 List<MovedTileInfo> movedTilesList = new();
-                for (int i = 0; i < matchedPosition.Count; i++)
+                for (int i = 0; i < allMatchedPositions.Count; i++)
                 {
-                    int x = matchedPosition[i].x;
-                    int y = matchedPosition[i].y;
+                    int x = allMatchedPositions[i].x;
+                    int y = allMatchedPositions[i].y;
                     if (y > 0)
                     {
                         for (int j = y; j > 0; j--)
@@ -109,12 +106,14 @@ namespace Gazeus.DesafioMatch3.Core
 
                 BoardSequence sequence = new()
                 {
-                    MatchedPosition = matchedPosition,
+                    MatchedPosition = allMatchedPositions,
                     MovedTiles = movedTilesList,
-                    AddedTiles = addedTiles
+                    AddedTiles = addedTiles,
+                    MatchModels = matchesMade
                 };
                 boardSequences.Add(sequence);
-                matchedTiles = _matchController.FindAllTilesToBeDestroyed(newBoard);
+                
+                matchesMade = _matchController.FindAllTilesToBeDestroyed(newBoard);
             }
 
             _boardTiles = newBoard;
@@ -179,22 +178,6 @@ namespace Gazeus.DesafioMatch3.Core
             }
 
             return board;
-        }
-
-        private static bool HasMatch(List<List<bool>> list)
-        {
-            for (int y = 0; y < list.Count; y++)
-            {
-                for (int x = 0; x < list[y].Count; x++)
-                {
-                    if (list[y][x])
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
     }
 }

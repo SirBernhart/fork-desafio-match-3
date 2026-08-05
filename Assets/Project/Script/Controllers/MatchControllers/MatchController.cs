@@ -26,7 +26,7 @@ namespace Gazeus.DesafioMatch3.Controllers
         /// </summary>
         /// <param name="newBoard">"The board to have the coordinates marked"</param>
         /// <returns></returns>
-        public List<List<bool>> FindAllTilesToBeDestroyed(List<List<Tile>> newBoard)
+        public List<MatchModel> FindAllTilesToBeDestroyed(List<List<Tile>> newBoard)
         {
             List<List<bool>> matchedTiles = new();
             for (int y = 0; y < newBoard.Count; y++)
@@ -38,12 +38,13 @@ namespace Gazeus.DesafioMatch3.Controllers
                 }
             }
 
+            List<MatchModel> matchesMade = new();
             foreach (IMatchPatternStrategy matchPatternStrategy in _matchPatternStrategies)
             {
-                matchPatternStrategy.FindMatches(newBoard, matchedTiles);
+                matchesMade.AddRange(matchPatternStrategy.FindMatches(newBoard, matchedTiles));
             }
 
-            return matchedTiles;
+            return matchesMade;
     }
         
         /*private readonly List<IMatchPattern> _patterns;
