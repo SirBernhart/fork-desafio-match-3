@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using DG.Tweening;
+using Gazeus.DesafioMatch3.Models;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Gazeus.DesafioMatch3.Views
+{
+    public class MatchView : MonoBehaviour
+    {
+        [SerializeField] private List<MatchBonusModel> _matchBonusModels;
+
+        public Tween AnimateTileDestruction(List<MatchModel> matchModels, GameObject[][] tiles)
+        {
+            Sequence sequence = DOTween.Sequence();
+            foreach (MatchModel matchModel in matchModels)
+            {
+                for (int i = 0; i < matchModel.MatchedTiles.Count; i++)
+                {
+                    Vector2Int position = matchModel.MatchedTiles[i];
+                    GameObject tile = tiles[position.y][position.x];
+                    if (!tile)
+                    {
+                        continue;
+                    }
+                    sequence.Join(tile.transform.DOScale(0.5f, 0.1f).SetEase(Ease.OutCubic)
+                        .OnComplete(() => tile.transform.DOScale(1.3f, 0.1f).SetEase(Ease.OutCubic)
+                            .OnComplete(() =>
+                            {
+                                if (tile)
+                                {
+                                    Destroy(tile);
+                                }
+                            })));
+                    
+                    tiles[position.y][position.x] = null;
+                }
+            }
+
+            sequence.Append(DOVirtual.DelayedCall(0.2f, () => { }));
+            return sequence;
+        }
+    }
+}
