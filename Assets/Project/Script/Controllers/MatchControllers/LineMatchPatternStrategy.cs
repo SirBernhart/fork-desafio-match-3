@@ -9,7 +9,7 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
     {
         public int Priority => 1;
         
-        public List<MatchModel> FindMatches(List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        public List<MatchModel> FindMatches(List<List<Tile>> newBoard)
         {
             List<MatchModel> matches = new ();
             // Check all horizontal lines
@@ -56,25 +56,24 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                 int startingIndex = i - matchSequenceSizeZeroBased;
                 List<Vector2Int> matchedTileCoordinates = 
                     SetLineMatch(matchSequenceSize, startingIndex, fixedCoordinateValue, isHorizontalLine);
+                matchModel.CenterPosition = matchedTileCoordinates[Mathf.CeilToInt(matchSequenceSize/2)];
                 switch (matchSequenceSize)
                 {
                     case 3:
                         matchModel.MatchBonusType = MatchBonusType.None;
                         break;
                     case 4:
-                
                         matchedTileCoordinates = SetLineMatch(10, 0, fixedCoordinateValue, isHorizontalLine);
                         matchModel.MatchBonusType = MatchBonusType.Line4;
                         break;
                     case 5:
-                        //SetExplosion(x-2, y, newBoard, matchedTiles);
+                        matchedTileCoordinates = SetExplosion(matchModel.CenterPosition.x, matchModel.CenterPosition.y, newBoard);
                         break;
                     case 6:
                         //SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
                         break;
                 }
                 matchModel.MatchedTiles = matchedTileCoordinates;
-                matchModel.CenterPosition = matchModel.MatchedTiles[matchModel.MatchedTiles.Count/2];
                 matchModels.Add(matchModel);
                 
                 matchSequenceSize = 1;
@@ -143,8 +142,9 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
         /// </summary>
         /// <param name="xCenter">center's x coordinate</param>
         /// <param name="yCenter">center's y coordinate</param>
-        private List<Vector2Int> SetExplosion(int xCenter, int yCenter, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        private List<Vector2Int> SetExplosion(int xCenter, int yCenter, List<List<Tile>> newBoard)
         {
+            List<Vector2Int> matchedPositions = new ();
             int maxYDelta = 3;
             for (int yHeightDelta = 0; yHeightDelta < maxYDelta; yHeightDelta++)
             {
@@ -171,16 +171,16 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
             {
                 if (currXToLeft >= 0)
                 {
-                    matchedTiles[currY][currXToLeft] = true;
+                    matchedPositions.Add(new Vector2Int(currXToLeft, currY));
                 }
 
                 if (currXToRight < newBoard[currY].Count)
                 {
-                    matchedTiles[currY][currXToRight] = true;
+                    matchedPositions.Add(new Vector2Int(currXToRight, currY));
                 }
             }
 
-            return null;
+            return matchedPositions;
         }
 
         private List<Vector2Int> SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)

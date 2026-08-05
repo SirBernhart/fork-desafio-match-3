@@ -28,20 +28,10 @@ namespace Gazeus.DesafioMatch3.Controllers
         /// <returns></returns>
         public List<MatchModel> FindAllTilesToBeDestroyed(List<List<Tile>> newBoard)
         {
-            List<List<bool>> matchedTiles = new();
-            for (int y = 0; y < newBoard.Count; y++)
-            {
-                matchedTiles.Add(new List<bool>(newBoard[y].Count));
-                for (int x = 0; x < newBoard.Count; x++)
-                {
-                    matchedTiles[y].Add(false);
-                }
-            }
-
             List<MatchModel> matchesMade = new();
             foreach (IMatchPatternStrategy matchPatternStrategy in _matchPatternStrategies)
             {
-                matchesMade.AddRange(matchPatternStrategy.FindMatches(newBoard, matchedTiles));
+                matchesMade.AddRange(matchPatternStrategy.FindMatches(newBoard));
             }
 
             return matchesMade;
