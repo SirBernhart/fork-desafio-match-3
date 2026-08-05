@@ -124,6 +124,11 @@ namespace Gazeus.DesafioMatch3.Views
             return sequence;
         }
 
+        public void ToggleSelectedTileAnimation(int x, int y)
+        {
+            _tileSpots[y][x].ToggleTileSelectedAnimation();
+        }
+
         #region Events
         private void TileSpot_Clicked(int x, int y)
         {

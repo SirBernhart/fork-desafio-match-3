@@ -13,6 +13,7 @@ namespace Gazeus.DesafioMatch3.Views
 
         private int _x;
         private int _y;
+        private bool _isAnimating = false;
 
         #region Unity
         private void Awake()
@@ -39,6 +40,21 @@ namespace Gazeus.DesafioMatch3.Views
         {
             tile.transform.SetParent(transform, false);
             tile.transform.position = transform.position;
+        }
+
+        public void ToggleTileSelectedAnimation()
+        {
+            if (_isAnimating)
+            {
+                transform.DOKill();
+                transform.localScale = Vector3.one;
+            }
+            else
+            {
+                transform.DOScale(1.3f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+            }
+
+            _isAnimating = !_isAnimating;
         }
 
         private void OnTileClick()

@@ -68,9 +68,11 @@ namespace Gazeus.DesafioMatch3.Controllers
         private void OnTileClick(int x, int y)
         {
             if (_isAnimating) return;
-
+            
             if (_selectedX > -1 && _selectedY > -1)
             {
+                _boardView.ToggleSelectedTileAnimation(_selectedX, _selectedY);
+                
                 if (Mathf.Abs(_selectedX - x) + Mathf.Abs(_selectedY - y) > 1)
                 {
                     _selectedX = -1;
@@ -99,6 +101,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             {
                 _selectedX = x;
                 _selectedY = y;
+                _boardView.ToggleSelectedTileAnimation(x, y);
             }
         }
     }
