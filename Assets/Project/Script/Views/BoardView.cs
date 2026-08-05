@@ -15,7 +15,8 @@ namespace Gazeus.DesafioMatch3.Views
         [SerializeField] private GridLayoutGroup _boardContainer;
         [SerializeField] private TilePrefabRepository _tilePrefabRepository;
         [SerializeField] private TileSpotView _tileSpotPrefab;
-
+        [SerializeField] private MatchView _matchView;
+        
         private GameObject[][] _tiles;
         private TileSpotView[][] _tileSpots;
 
@@ -75,20 +76,10 @@ namespace Gazeus.DesafioMatch3.Views
             return sequence;
         }
 
-        public Tween DestroyTiles(List<Vector2Int> matchedPosition)
+        public Tween DestroyTiles(List<MatchModel> matchModels)
         {
-            Sequence sequence = DOTween.Sequence();
-            for (int i = 0; i < matchedPosition.Count; i++)
-            {
-                Vector2Int position = matchedPosition[i];
-                GameObject tile = _tiles[position.y][position.x];
-                sequence.Join(tile.transform.DOScale(0.5f, 0.1f).SetEase(Ease.OutCubic)
-                    .OnComplete(()=> tile.transform.DOScale(1.3f, 0.1f).SetEase(Ease.OutCubic)
-                        .OnComplete(() => Destroy(tile))));
-                _tiles[position.y][position.x] = null;
-            }
+            Tween sequence = _matchView.AnimateTileDestruction(matchModels, _tiles);
 
-            sequence.Append(DOVirtual.DelayedCall(0.2f, () => { }));
             return sequence;
         }
 

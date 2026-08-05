@@ -172,6 +172,7 @@ MonoBehaviour:
   _boardContainer: {fileID: 429446045}
   _tilePrefabRepository: {fileID: 11400000, guid: 153eac3747f207a40add49ed6e2dacb9, type: 2}
   _tileSpotPrefab: {fileID: -4864831497923239132, guid: 6527630aaec5689489d14bfbb482fd0f, type: 3}
+  _matchView: {fileID: 1361904667}
 --- !u!114 &429446044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,6 +693,7 @@ GameObject:
   - component: {fileID: 1361904665}
   - component: {fileID: 1361904664}
   - component: {fileID: 1361904666}
+  - component: {fileID: 1361904667}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -743,6 +745,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c19fd40514cd23498c8f36593d42a96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.Controllers.MatchController
+--- !u!114 &1361904667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361904663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f736138fec60bdef80e3234cbec6a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.Views.MatchView
+  _matchBonusModels: []
 --- !u!1 &1583567000
 GameObject:
   m_ObjectHideFlags: 0

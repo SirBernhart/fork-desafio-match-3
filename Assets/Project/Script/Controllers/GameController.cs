@@ -45,7 +45,7 @@ namespace Gazeus.DesafioMatch3.Controllers
             BoardSequence boardSequence = boardSequences[index];
 
             Sequence sequence = DOTween.Sequence();
-            sequence.Append(_boardView.DestroyTiles(boardSequence.MatchedPosition).OnComplete(OnTilesDestroyed));
+            sequence.Append(_boardView.DestroyTiles(boardSequence.MatchModels).OnComplete(OnTilesDestroyed));
             sequence.Append(_boardView.MoveTiles(boardSequence.MovedTiles));
             sequence.Append(_boardView.CreateTile(boardSequence.AddedTiles));
 
