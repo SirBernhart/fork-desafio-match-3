@@ -20,19 +20,15 @@ namespace Gazeus.DesafioMatch3.Views
                 {
                     Vector2Int position = matchModel.MatchedTiles[i];
                     GameObject tile = tiles[position.y][position.x];
-                    if (!tile)
+                    if (tile)
                     {
-                        continue;
-                    }
-                    sequence.Join(tile.transform.DOScale(0.5f, 0.1f).SetEase(Ease.OutCubic)
-                        .OnComplete(() => tile.transform.DOScale(1.3f, 0.1f).SetEase(Ease.OutCubic)
-                            .OnComplete(() =>
-                            {
-                                if (tile)
+                        sequence.Join(tile.transform.DOScale(0.5f, 0.1f).SetEase(Ease.OutCubic)
+                            .OnComplete(() => tile.transform.DOScale(1.3f, 0.1f).SetEase(Ease.OutCubic)
+                                .OnComplete(() =>
                                 {
                                     Destroy(tile);
-                                }
-                            })));
+                                })));
+                    }
                     
                     tiles[position.y][position.x] = null;
                 }
