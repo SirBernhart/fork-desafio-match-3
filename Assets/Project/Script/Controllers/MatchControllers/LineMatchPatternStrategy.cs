@@ -56,14 +56,15 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                 int startingIndex = i - matchSequenceSizeZeroBased;
                 List<Vector2Int> matchedTileCoordinates = 
                     SetLineMatch(matchSequenceSize, startingIndex, fixedCoordinateValue, isHorizontalLine);
-                matchModel.MatchedTiles = matchedTileCoordinates;
-                matchModel.MatchBonusType = MatchBonusType.None;
-                /*switch (matchSequenceSize)
+                switch (matchSequenceSize)
                 {
                     case 3:
+                        matchModel.MatchBonusType = MatchBonusType.None;
                         break;
                     case 4:
-                        //SetWholeLineToBeCleared(matchedTiles[fixedCoordinateValue]);
+                
+                        matchedTileCoordinates = SetLineMatch(10, 0, fixedCoordinateValue, isHorizontalLine);
+                        matchModel.MatchBonusType = MatchBonusType.Line4;
                         break;
                     case 5:
                         //SetExplosion(x-2, y, newBoard, matchedTiles);
@@ -71,7 +72,8 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     case 6:
                         //SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
                         break;
-                }*/
+                }
+                matchModel.MatchedTiles = matchedTileCoordinates;
                 matchModel.CenterPosition = matchModel.MatchedTiles[matchModel.MatchedTiles.Count/2];
                 matchModels.Add(matchModel);
                 
@@ -134,64 +136,6 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
             }
             
             return matchedTiles;
-        }
-        
-        private List<Vector2Int> SetWholeLineToBeCleared(List<bool> lineToBeCleared)
-        {
-            for(int x = 0; x < lineToBeCleared.Count; x++)
-            {
-                lineToBeCleared[x] = true;
-            }
-
-            return null;
-        }
-        
-        
-
-        public static bool CanMatchColumn(int x, int y, List<List<Tile>> newBoard)
-        {
-            return y > 1 &&
-                   newBoard[y][x].Type == newBoard[y - 1][x].Type &&
-                   newBoard[y - 1][x].Type == newBoard[y - 2][x].Type;
-        }
-        
-        private void FindMatchesInColumn(int x, int y, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
-        {
-            if (CanMatchColumn(x, y, newBoard))
-            {
-                matchedTiles[y][x] = true;
-                matchedTiles[y - 1][x] = true;
-                matchedTiles[y - 2][x] = true;
-                if (y >= 3 &&
-                    newBoard[y - 2][x].Type == newBoard[y - 3][x].Type)
-                {
-                    if (y >= 4 &&
-                        newBoard[y - 3][x].Type == newBoard[y - 4][x].Type)
-                    {
-                        if (y >= 5 &&
-                            newBoard[y - 4][x].Type == newBoard[y - 5][x].Type)
-                        {
-                            SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
-                        }
-                        else
-                        {
-                            SetExplosion(x, y-2, newBoard, matchedTiles);
-                        }
-                    }
-                    else
-                    {
-                        SetWholeColumnToBeCleared(x, matchedTiles);
-                    }
-                }
-            }
-        }
-        
-        private void SetWholeColumnToBeCleared(int columnToBeClearedNumber, List<List<bool>> matchedTiles)
-        {
-            for (int y = 0; y < matchedTiles.Count; y++)
-            {
-                matchedTiles[y][columnToBeClearedNumber] = true;
-            }
         }
 
         /// <summary>
