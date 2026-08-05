@@ -33,58 +33,55 @@ namespace Gazeus.DesafioMatch3.Core
             while (matchesMade.Count > 0)
             {
                 List<Vector2Int> allMatchedPositions = new();
+                HashSet<int> affectedColumns = new();
                 foreach (MatchModel match in matchesMade)
                 {
-                    //Clearing board of matched tiles
                     foreach (Vector2Int matchedTile in match.MatchedTiles)
                     {
-                        // Match already registered, skip it
+                        // Already cleared by an earlier, overlapping match this pass - skip it
                         if (newBoard[matchedTile.y][matchedTile.x].Id == -1)
                         {
                             continue;
                         }
                         newBoard[matchedTile.y][matchedTile.x] = new Tile { Id = -1, Type = -1 };
                         allMatchedPositions.Add(matchedTile);
+                        affectedColumns.Add(matchedTile.x);
                     }
                 }
 
-                // Dropping the tiles
+                // Dropping the tiles: compact each affected column downward in ONE pass.
+                // This is correct regardless of how many matches touched the column or
+                // what order they were found in (unlike shifting once per matched tile,
+                // which can overwrite/lose tiles when a column has 2+ matches).
                 Dictionary<int, MovedTileInfo> movedTiles = new();
                 List<MovedTileInfo> movedTilesList = new();
-                for (int i = 0; i < allMatchedPositions.Count; i++)
+                int boardHeight = newBoard.Count;
+                foreach (int x in affectedColumns)
                 {
-                    int x = allMatchedPositions[i].x;
-                    int y = allMatchedPositions[i].y;
-                    if (y > 0)
+                    int writeRow = boardHeight - 1;
+                    for (int readRow = boardHeight - 1; readRow >= 0; readRow--)
                     {
-                        for (int j = y; j > 0; j--)
+                        Tile tile = newBoard[readRow][x];
+                        if (tile.Type == -1)
                         {
-                            Tile movedTile = newBoard[j - 1][x];
-                            newBoard[j][x] = movedTile;
-                            if (movedTile.Type > -1)
-                            {
-                                if (movedTiles.ContainsKey(movedTile.Id))
-                                {
-                                    movedTiles[movedTile.Id].To = new Vector2Int(x, j);
-                                }
-                                else
-                                {
-                                    MovedTileInfo movedTileInfo = new()
-                                    {
-                                        From = new Vector2Int(x, j - 1),
-                                        To = new Vector2Int(x, j)
-                                    };
-                                    movedTiles.Add(movedTile.Id, movedTileInfo);
-                                    movedTilesList.Add(movedTileInfo);
-                                }
-                            }
+                            continue;
                         }
 
-                        newBoard[0][x] = new Tile
+                        if (readRow != writeRow)
                         {
-                            Id = -1,
-                            Type = -1
-                        };
+                            newBoard[writeRow][x] = tile;
+                            newBoard[readRow][x] = new Tile { Id = -1, Type = -1 };
+
+                            MovedTileInfo movedTileInfo = new()
+                            {
+                                From = new Vector2Int(x, readRow),
+                                To = new Vector2Int(x, writeRow)
+                            };
+                            movedTiles.Add(tile.Id, movedTileInfo);
+                            movedTilesList.Add(movedTileInfo);
+                        }
+
+                        writeRow--;
                     }
                 }
 
@@ -117,7 +114,7 @@ namespace Gazeus.DesafioMatch3.Core
                     MatchModels = matchesMade
                 };
                 boardSequences.Add(sequence);
-                
+
                 matchesMade = _matchController.FindAllTilesToBeDestroyed(newBoard);
             }
 
