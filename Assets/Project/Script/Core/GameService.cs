@@ -38,8 +38,13 @@ namespace Gazeus.DesafioMatch3.Core
                     //Clearing board of matched tiles
                     foreach (Vector2Int matchedTile in match.MatchedTiles)
                     {
-                        allMatchedPositions.Add(matchedTile);
+                        // Match already registered, skip it
+                        if (newBoard[matchedTile.y][matchedTile.x].Id == -1)
+                        {
+                            continue;
+                        }
                         newBoard[matchedTile.y][matchedTile.x] = new Tile { Id = -1, Type = -1 };
+                        allMatchedPositions.Add(matchedTile);
                     }
                 }
 
