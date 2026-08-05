@@ -68,9 +68,14 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                         break;
                     case 5:
                         matchedTileCoordinates = SetExplosion(matchModel.CenterPosition.x, matchModel.CenterPosition.y, newBoard);
+                        matchModel.MatchBonusType = MatchBonusType.Line5;
                         break;
                     case 6:
-                        //SetToDestroyAllTilesOfType(newBoard[y][x].Type, newBoard, matchedTiles);
+                        int tileType = isHorizontalLine 
+                            ? newBoard[fixedCoordinateValue][i].Type 
+                            : newBoard[i][fixedCoordinateValue].Type;
+                        matchedTileCoordinates = SetToDestroyAllTilesOfType(tileType, newBoard);
+                        matchModel.MatchBonusType = MatchBonusType.Line6;
                         break;
                 }
                 matchModel.MatchedTiles = matchedTileCoordinates;
@@ -183,19 +188,20 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
             return matchedPositions;
         }
 
-        private List<Vector2Int> SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard, List<List<bool>> matchedTiles)
+        private List<Vector2Int> SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard)
         {
+            var matchedTiles = new List<Vector2Int>();
             for (int y = 0; y < newBoard.Count; y++)
             {
                 for (int x = 0; x < newBoard[y].Count; x++)
                 {
-                    if (newBoard[y][x].Type == type && !matchedTiles[y][x])
+                    if (newBoard[y][x].Type == type)
                     {
-                        matchedTiles[y][x] = true;
+                        matchedTiles.Add(new Vector2Int(x, y));
                     }
                 }
             }
-            return null;
+            return matchedTiles;
         }
     }
 }
