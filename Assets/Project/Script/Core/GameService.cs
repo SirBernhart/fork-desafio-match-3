@@ -58,30 +58,30 @@ namespace Gazeus.DesafioMatch3.Core
                 int boardHeight = newBoard.Count;
                 foreach (int x in affectedColumns)
                 {
-                    int writeRow = boardHeight - 1;
-                    for (int readRow = boardHeight - 1; readRow >= 0; readRow--)
+                    int rowToDropTileTo = boardHeight - 1;
+                    for (int currRow = boardHeight - 1; currRow >= 0; currRow--)
                     {
-                        Tile tile = newBoard[readRow][x];
+                        Tile tile = newBoard[currRow][x];
                         if (tile.Type == -1)
                         {
                             continue;
                         }
 
-                        if (readRow != writeRow)
+                        if (currRow != rowToDropTileTo)
                         {
-                            newBoard[writeRow][x] = tile;
-                            newBoard[readRow][x] = new Tile { Id = -1, Type = -1 };
+                            newBoard[rowToDropTileTo][x] = tile;
+                            newBoard[currRow][x] = new Tile { Id = -1, Type = -1 };
 
                             MovedTileInfo movedTileInfo = new()
                             {
-                                From = new Vector2Int(x, readRow),
-                                To = new Vector2Int(x, writeRow)
+                                From = new Vector2Int(x, currRow),
+                                To = new Vector2Int(x, rowToDropTileTo)
                             };
                             movedTiles.Add(tile.Id, movedTileInfo);
                             movedTilesList.Add(movedTileInfo);
                         }
 
-                        writeRow--;
+                        rowToDropTileTo--;
                     }
                 }
 
