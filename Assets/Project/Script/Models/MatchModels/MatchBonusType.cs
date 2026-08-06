@@ -3,8 +3,9 @@ namespace Gazeus.DesafioMatch3.Models
     public enum MatchBonusType
     {
         None = 0, 
-        Line4 = 100, 
-        Line5 = 200, 
-        Line6 = 300
+        HorizontalLineClear = 100, 
+        VerticalLineClear = 200, 
+        Explosion = 300,
+        ClearAllTilesOfSameColor = 400,
     }
 }

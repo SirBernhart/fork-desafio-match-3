@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
 using UnityEngine;
@@ -46,36 +45,54 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     matchSequenceSize = 1;
                     continue;
                 }
+
+                MatchShape matchShape;
+                Vector2Int centerPosition = Vector2Int.zero;
+                int sequenceMiddleIndex = i - Mathf.CeilToInt(matchSequenceSize / 2);
+                if (isHorizontalLine)
+                {
+                    matchShape = MatchShape.HorizontalLine;
+                    centerPosition = new Vector2Int(sequenceMiddleIndex, fixedCoordinateValue);
+                }
+                else
+                {
+                    matchShape = MatchShape.VerticalLine;
+                    centerPosition = new Vector2Int(fixedCoordinateValue, sequenceMiddleIndex);
+                }
                 
                 MatchModel matchModel = new()
                 {
-                    Shape = isHorizontalLine ? MatchShape.HorizontalLine : MatchShape.VerticalLine
+                    Shape = matchShape,
+                    CenterPosition = centerPosition
                 };
-                
-                int matchSequenceSizeZeroBased = matchSequenceSize - 1;
-                int startingIndex = i - matchSequenceSizeZeroBased;
-                List<Vector2Int> matchedTileCoordinates = 
-                    SetLineMatch(matchSequenceSize, startingIndex, fixedCoordinateValue, isHorizontalLine);
-                matchModel.CenterPosition = matchedTileCoordinates[Mathf.CeilToInt(matchSequenceSize/2)];
+
+                List<Vector2Int> matchedTileCoordinates = null;
+
                 switch (matchSequenceSize)
                 {
-                    case 3:
-                        matchModel.MatchBonusType = MatchBonusType.None;
-                        break;
                     case 4:
-                        matchedTileCoordinates = SetLineMatch(10, 0, fixedCoordinateValue, isHorizontalLine);
-                        matchModel.MatchBonusType = MatchBonusType.Line4;
+                        int lineSize = isHorizontalLine 
+                            ? newBoard[fixedCoordinateValue].Count 
+                            : newBoard.Count;
+                        matchedTileCoordinates = SetLineMatch(lineSize, 0, fixedCoordinateValue, isHorizontalLine);
+                        matchModel.MatchBonusType = isHorizontalLine ? MatchBonusType.HorizontalLineClear : MatchBonusType.VerticalLineClear;
                         break;
                     case 5:
                         matchedTileCoordinates = SetExplosion(matchModel.CenterPosition.x, matchModel.CenterPosition.y, newBoard);
-                        matchModel.MatchBonusType = MatchBonusType.Line5;
+                        matchModel.MatchBonusType = MatchBonusType.Explosion;
                         break;
                     case 6:
                         int tileType = isHorizontalLine 
                             ? newBoard[fixedCoordinateValue][i].Type 
                             : newBoard[i][fixedCoordinateValue].Type;
                         matchedTileCoordinates = SetToDestroyAllTilesOfType(tileType, newBoard);
-                        matchModel.MatchBonusType = MatchBonusType.Line6;
+                        matchModel.MatchBonusType = MatchBonusType.ClearAllTilesOfSameColor;
+                        break;
+                    default:
+                        int matchSequenceSizeZeroBased = matchSequenceSize - 1;
+                        int startingIndex = i - matchSequenceSizeZeroBased;
+                        matchedTileCoordinates = SetLineMatch(matchSequenceSize, startingIndex, fixedCoordinateValue, isHorizontalLine);
+                        matchModel.MatchBonusType = MatchBonusType.None;
                         break;
                 }
                 matchModel.MatchedTiles = matchedTileCoordinates;
