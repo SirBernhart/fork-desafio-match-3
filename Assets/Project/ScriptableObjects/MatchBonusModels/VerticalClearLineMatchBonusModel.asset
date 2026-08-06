@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e0e32f2ae3d6db17bedd2d199d6b55d, type: 3}
+  m_Name: VerticalClearLineMatchBonusModel
+  m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusModel
+  _type: 200
+  _matchBonusViewPrefab: {fileID: 7470751964780606570, guid: 0381a8a4450898cce8d457d9084f7fc5, type: 3}
