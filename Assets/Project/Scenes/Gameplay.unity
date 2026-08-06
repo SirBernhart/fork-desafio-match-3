@@ -757,7 +757,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f736138fec60bdef80e3234cbec6a15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.Views.MatchView
-  _matchBonusModels: []
+  _matchBonusModels:
+  - {fileID: 11400000, guid: b516f0c228d35c3c5a32e24d217a1603, type: 2}
+  - {fileID: 11400000, guid: 69de623dad73be6749ffbff4ee49bd9d, type: 2}
+  - {fileID: 11400000, guid: 41943a1c97ce977eba3584c89d3a5141, type: 2}
+  - {fileID: 11400000, guid: d2f1bcb0e632e62928b822a182430350, type: 2}
 --- !u!1 &1583567000
 GameObject:
   m_ObjectHideFlags: 0
