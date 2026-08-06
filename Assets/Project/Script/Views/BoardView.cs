@@ -78,7 +78,7 @@ namespace Gazeus.DesafioMatch3.Views
 
         public Tween DestroyTiles(List<MatchModel> matchModels)
         {
-            Tween sequence = _matchView.AnimateTileDestruction(matchModels, _tiles);
+            Tween sequence = _matchView.AnimateTileDestruction(matchModels, _tiles, _tileSpots);
 
             return sequence;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Gazeus.DesafioMatch3.Models;
 using UnityEngine;
@@ -11,11 +12,14 @@ namespace Gazeus.DesafioMatch3.Views
     {
         [SerializeField] private List<MatchBonusModel> _matchBonusModels;
 
-        public Tween AnimateTileDestruction(List<MatchModel> matchModels, GameObject[][] tiles)
+        public Tween AnimateTileDestruction(List<MatchModel> matchModels, GameObject[][] tiles, TileSpotView[][] tileSpots)
         {
             Sequence sequence = DOTween.Sequence();
             foreach (MatchModel matchModel in matchModels)
             {
+                Vector2 matchCenterTile = matchModel.CenterPosition;
+                Transform effectCenterTileSpotTransform = tileSpots[(int)matchCenterTile.y][(int)matchCenterTile.x].transform;
+                
                 for (int i = 0; i < matchModel.MatchedTiles.Count; i++)
                 {
                     Vector2Int position = matchModel.MatchedTiles[i];
@@ -32,6 +36,21 @@ namespace Gazeus.DesafioMatch3.Views
                     
                     tiles[position.y][position.x] = null;
                 }
+
+                if (matchModel.MatchBonusType == MatchBonusType.None)
+                {
+                    continue;
+                }
+
+                MatchBonusModel bonusModel = _matchBonusModels.FirstOrDefault(bonusModel => bonusModel.BonusType == matchModel.MatchBonusType);
+                if (bonusModel == null)
+                {
+                    Debug.LogError($"Missing match bonus model: {matchModel.MatchBonusType}");
+                    continue;
+                }
+
+                sequence.PrependCallback(() =>
+                    Instantiate(bonusModel.MatchBonusViewPrefab, effectCenterTileSpotTransform));
             }
 
             sequence.Append(DOVirtual.DelayedCall(0.2f, () => { }));
