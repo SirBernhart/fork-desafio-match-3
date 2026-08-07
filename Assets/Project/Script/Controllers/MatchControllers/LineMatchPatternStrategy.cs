@@ -157,9 +157,5 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
             
             return matchedTiles;
         }
-
-        
-
-        
     }
 }
