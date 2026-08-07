@@ -49,10 +49,7 @@ namespace Gazeus.DesafioMatch3.Core
                     }
                 }
 
-                // Dropping the tiles: compact each affected column downward in ONE pass.
-                // This is correct regardless of how many matches touched the column or
-                // what order they were found in (unlike shifting once per matched tile,
-                // which can overwrite/lose tiles when a column has 2+ matches).
+                // Dropping the tiles
                 Dictionary<int, MovedTileInfo> movedTiles = new();
                 List<MovedTileInfo> movedTilesList = new();
                 int boardHeight = newBoard.Count;
