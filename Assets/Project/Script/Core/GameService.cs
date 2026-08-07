@@ -162,16 +162,26 @@ namespace Gazeus.DesafioMatch3.Core
                         noMatchTypes.Add(_tilesTypes[i]);
                     }
 
+                    // Avoid horizontal line match
                     if (x > 1 &&
                         board[y][x - 1].Type == board[y][x - 2].Type)
                     {
                         noMatchTypes.Remove(board[y][x - 1].Type);
                     }
 
+                    // Avoid vertical line match
                     if (y > 1 &&
                         board[y - 1][x].Type == board[y - 2][x].Type)
                     {
                         noMatchTypes.Remove(board[y - 1][x].Type);
+                    }
+
+                    // Avoid square match
+                    if (x > 0 && y > 0 &&
+                        board[y][x - 1].Type == board[y - 1][x].Type &&
+                        board[y - 1][x].Type == board[y - 1][x - 1].Type)
+                    {
+                        noMatchTypes.Remove(board[y][x - 1].Type);
                     }
 
                     board[y][x].Id = _tileCount++;
