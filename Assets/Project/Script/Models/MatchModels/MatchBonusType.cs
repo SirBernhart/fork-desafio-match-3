@@ -7,5 +7,6 @@ namespace Gazeus.DesafioMatch3.Models
         VerticalLineClear = 200, 
         Explosion = 300,
         ClearAllTilesOfSameColor = 400,
+        ClearRandomTiles = 500
     }
 }
