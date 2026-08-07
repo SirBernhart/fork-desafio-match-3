@@ -45,8 +45,8 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                 }
 
                 MatchShape matchShape;
-                Vector2Int centerPosition = Vector2Int.zero;
-                int sequenceMiddleIndex = i - Mathf.CeilToInt(matchSequenceSize / 2);
+                Vector2Int centerPosition;
+                int sequenceMiddleIndex = i - Mathf.CeilToInt(matchSequenceSize / 2f);
                 if (isHorizontalLine)
                 {
                     matchShape = MatchShape.HorizontalLine;
@@ -64,7 +64,7 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     CenterPosition = centerPosition
                 };
 
-                List<Vector2Int> matchedTileCoordinates = null;
+                List<Vector2Int> matchedTileCoordinates;
 
                 switch (matchSequenceSize)
                 {
