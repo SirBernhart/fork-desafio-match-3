@@ -76,14 +76,14 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                         matchModel.MatchBonusType = isHorizontalLine ? MatchBonusType.HorizontalLineClear : MatchBonusType.VerticalLineClear;
                         break;
                     case 5:
-                        matchedTileCoordinates = SetExplosion(matchModel.CenterPosition.x, matchModel.CenterPosition.y, newBoard);
+                        matchedTileCoordinates = ExplosionMatchBonusController.GetTileCoordinates(matchModel.CenterPosition.x, matchModel.CenterPosition.y, newBoard);
                         matchModel.MatchBonusType = MatchBonusType.Explosion;
                         break;
                     case 6:
                         int tileType = isHorizontalLine 
                             ? newBoard[fixedCoordinateValue][i].Type 
                             : newBoard[i][fixedCoordinateValue].Type;
-                        matchedTileCoordinates = SetToDestroyAllTilesOfType(tileType, newBoard);
+                        matchedTileCoordinates = DestroyAllTilesOfTypeMatchBonusController.GetTileCoordinates(tileType, newBoard);
                         matchModel.MatchBonusType = MatchBonusType.ClearAllTilesOfSameColor;
                         break;
                     default:
@@ -158,66 +158,8 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
             return matchedTiles;
         }
 
-        /// <summary>
-        /// Sets tiles to be destroyed in a diamond shape, with the middle tile of the 5-matched line as it's center
-        /// </summary>
-        /// <param name="xCenter">center's x coordinate</param>
-        /// <param name="yCenter">center's y coordinate</param>
-        private List<Vector2Int> SetExplosion(int xCenter, int yCenter, List<List<Tile>> newBoard)
-        {
-            List<Vector2Int> matchedPositions = new ();
-            int maxYDelta = 3;
-            for (int yHeightDelta = 0; yHeightDelta < maxYDelta; yHeightDelta++)
-            {
-                int currYAbove = yCenter - yHeightDelta;
-                int currYBelow = yCenter + yHeightDelta;
-                int currLineMaxXDelta = maxYDelta - yHeightDelta;
-                for (int currXDelta = 0; currXDelta < currLineMaxXDelta; currXDelta++)
-                {
-                    int currXToLeft = xCenter - currXDelta;
-                    int currXToRight = xCenter + currXDelta;
-                    if (currYAbove >= 0)
-                    {
-                        SetTilesInCurrXDelta(currXToLeft, currXToRight, currYAbove);
-                    }
+        
 
-                    if (currYBelow < newBoard.Count)
-                    {
-                        SetTilesInCurrXDelta(currXToLeft, currXToRight, currYBelow);
-                    }
-                }
-            }
-
-            void SetTilesInCurrXDelta(int currXToLeft, int currXToRight, int currY)
-            {
-                if (currXToLeft >= 0)
-                {
-                    matchedPositions.Add(new Vector2Int(currXToLeft, currY));
-                }
-
-                if (currXToRight < newBoard[currY].Count)
-                {
-                    matchedPositions.Add(new Vector2Int(currXToRight, currY));
-                }
-            }
-
-            return matchedPositions;
-        }
-
-        private List<Vector2Int> SetToDestroyAllTilesOfType(int type, List<List<Tile>> newBoard)
-        {
-            var matchedTiles = new List<Vector2Int>();
-            for (int y = 0; y < newBoard.Count; y++)
-            {
-                for (int x = 0; x < newBoard[y].Count; x++)
-                {
-                    if (newBoard[y][x].Type == type)
-                    {
-                        matchedTiles.Add(new Vector2Int(x, y));
-                    }
-                }
-            }
-            return matchedTiles;
-        }
+        
     }
 }
