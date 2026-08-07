@@ -27,7 +27,6 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                                 new(x + 1, y),
                                 new(x + 1, y + 1)
                             },
-                            Shape = MatchShape.Square,
                             CenterPosition = new Vector2Int(x, y),
                             MatchBonusType = MatchBonusType.ClearRandomTiles
                         };

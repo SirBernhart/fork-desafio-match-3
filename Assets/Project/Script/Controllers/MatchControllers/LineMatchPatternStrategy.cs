@@ -44,23 +44,19 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                     continue;
                 }
 
-                MatchShape matchShape;
                 Vector2Int centerPosition;
                 int sequenceMiddleIndex = i - Mathf.CeilToInt(matchSequenceSize / 2f);
                 if (isHorizontalLine)
                 {
-                    matchShape = MatchShape.HorizontalLine;
                     centerPosition = new Vector2Int(sequenceMiddleIndex, fixedCoordinateValue);
                 }
                 else
                 {
-                    matchShape = MatchShape.VerticalLine;
                     centerPosition = new Vector2Int(fixedCoordinateValue, sequenceMiddleIndex);
                 }
                 
                 MatchModel matchModel = new()
                 {
-                    Shape = matchShape,
                     CenterPosition = centerPosition
                 };
 
