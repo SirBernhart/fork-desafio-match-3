@@ -35,52 +35,6 @@ namespace Gazeus.DesafioMatch3.Controllers
             }
 
             return matchesMade;
-    }
-        
-        /*private readonly List<IMatchPattern> _patterns;
-        private readonly List<IMatchEffect> _effects;
-    
-        public MatchController()
-        {
-            _patterns = new List<IMatchPattern>
-            {
-                new TShapePattern(),     // Priority 4
-                new SquarePattern(),     // Priority 3
-                new LShapePattern(),     // Priority 2
-                new StraightLinePattern() // Priority 1
-            }.OrderByDescending(p => p.Priority).ToList();
-        
-            _effects = new List<IMatchEffect>
-            {
-                new SimpleDestroyEffect(),
-                new RowClearEffect(),
-                new ColumnClearEffect(),
-                new BombEffect(),
-                // etc.
-            };
         }
-    
-        public void ProcessMatches(List<Tile> selectedTiles)
-        {
-            MatchData matchData = null;
-        
-            // Find matching pattern (Strategy)
-            foreach (var pattern in _patterns)
-            {
-                if (pattern.Matches(selectedTiles, out matchData))
-                    break;
-            }
-        
-            if (matchData == null) return;
-        
-            // Execute matching effects (Command)
-            foreach (var effect in _effects)
-            {
-                if (effect.CanExecute(matchData))
-                {
-                    effect.Execute(matchData);
-                }
-            }
-        }*/
     }
 }
