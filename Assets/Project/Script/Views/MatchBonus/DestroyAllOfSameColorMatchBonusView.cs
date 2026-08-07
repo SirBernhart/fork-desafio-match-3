@@ -15,6 +15,7 @@ namespace Gazeus.DesafioMatch3.Views.MatchBonus
         [SerializeField] private  float angle2 = -90f;
         
         private bool isAngle1 = true;
+        private WaitForSeconds _waitForSeconds = new WaitForSeconds(0.1f);
         
         public override void SetupAndPlay(MatchModel matchModel, TileSpotView[][] tileSpotViews)
         {
@@ -39,7 +40,7 @@ namespace Gazeus.DesafioMatch3.Views.MatchBonus
                     _vfxImage.rectTransform.localRotation = Quaternion.Euler(0, 0, angle1);
                 }
                 isAngle1 = !isAngle1;
-                yield return new WaitForSeconds(0.1f);
+                yield return _waitForSeconds;
             }
         }
     }
