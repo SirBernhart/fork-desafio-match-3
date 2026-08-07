@@ -9,7 +9,6 @@ namespace Gazeus.DesafioMatch3.Controllers
     public class MatchController : MonoBehaviour
     {
         private List<IMatchPatternStrategy> _matchPatternStrategies;
-        //private readonly List<IMatchEffect> _effects;
         
         private void Awake()
         {
