@@ -6,8 +6,6 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
 {
     public class LineMatchPatternStrategy : IMatchPatternStrategy
     {
-        public int Priority => 1;
-        
         public List<MatchModel> FindMatches(List<List<Tile>> newBoard)
         {
             List<MatchModel> matches = new ();
@@ -96,6 +94,7 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                         break;
                 }
                 matchModel.MatchedTiles = matchedTileCoordinates;
+                
                 matchModels.Add(matchModel);
                 
                 matchSequenceSize = 1;

@@ -16,15 +16,16 @@ namespace Gazeus.DesafioMatch3.Controllers
             _matchPatternStrategies = new List<IMatchPatternStrategy>
             {
                 // TODO: Add other strategies
-                new LineMatchPatternStrategy()
-            }.OrderByDescending(p => p.Priority).ToList();
+                new LineMatchPatternStrategy(),
+                new SquareMatchPatternStrategy()
+            };
         }
 
         /// <summary>
         /// Sets all the coordinates that have tiles to be destroyed as true. This includes normal
         /// matching and bonus effects (line-clearer, explosions etc)
         /// </summary>
-        /// <param name="newBoard">"The board to have the coordinates marked"</param>
+        /// <param name="newBoard">"The current board, to check the tiles"</param>
         /// <returns></returns>
         public List<MatchModel> FindAllTilesToBeDestroyed(List<List<Tile>> newBoard)
         {
