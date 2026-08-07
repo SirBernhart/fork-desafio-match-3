@@ -61,7 +61,7 @@ namespace Gazeus.DesafioMatch3.Controllers
 
             void OnTilesDestroyed()
             {
-                _scoreController.HandleTilesDestroyed(boardSequence.MatchedPosition.Count);
+                _scoreController.HandleTilesDestroyed(boardSequence.MatchModels);
             }
         }
 

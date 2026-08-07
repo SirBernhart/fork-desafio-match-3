@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Gazeus.DesafioMatch3.Models;
 using Gazeus.DesafioMatch3.Views;
 using UnityEngine;
@@ -19,10 +20,15 @@ namespace Gazeus.DesafioMatch3.Controllers
             _scoreModel.OnScoreChanged += OnScoreChanged;
         }
 
-        public void HandleTilesDestroyed(int destroyedTiles)
+        public void HandleTilesDestroyed(List<MatchModel> matches)
         {
-            float sequenceSizeMultiplier = Mathf.Pow(destroyedTiles, _sequenceSizePowerToElevate);
-            int scoreToIncrease = Mathf.CeilToInt(sequenceSizeMultiplier * _baseTileScoreValue);
+            int scoreToIncrease = 0;
+            foreach (MatchModel match in matches)
+            {
+                float sequenceSizeMultiplier = Mathf.Pow(match.MatchedTiles.Count, _sequenceSizePowerToElevate);
+                scoreToIncrease += Mathf.CeilToInt(sequenceSizeMultiplier * _baseTileScoreValue);
+            }
+            
             _scoreModel.IncreaseScore(scoreToIncrease);
         }
         
