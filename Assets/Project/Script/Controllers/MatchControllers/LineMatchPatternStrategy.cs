@@ -68,6 +68,12 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
 
                 switch (matchSequenceSize)
                 {
+                    case 3:
+                        int matchSequenceSizeZeroBased = matchSequenceSize - 1;
+                        int startingIndex = i - matchSequenceSizeZeroBased;
+                        matchedTileCoordinates = SetLineMatch(matchSequenceSize, startingIndex, fixedCoordinateValue, isHorizontalLine);
+                        matchModel.MatchBonusType = MatchBonusType.None;
+                        break;
                     case 4:
                         int lineSize = isHorizontalLine 
                             ? newBoard[fixedCoordinateValue].Count 
@@ -79,18 +85,12 @@ namespace Gazeus.DesafioMatch3.Controllers.MatchControllers
                         matchedTileCoordinates = ExplosionMatchBonusController.GetTileCoordinates(matchModel.CenterPosition.x, matchModel.CenterPosition.y, newBoard);
                         matchModel.MatchBonusType = MatchBonusType.Explosion;
                         break;
-                    case 6:
+                    default: // 6 or more
                         int tileType = isHorizontalLine 
                             ? newBoard[fixedCoordinateValue][i].Type 
                             : newBoard[i][fixedCoordinateValue].Type;
                         matchedTileCoordinates = DestroyAllTilesOfTypeMatchBonusController.GetTileCoordinates(tileType, newBoard);
                         matchModel.MatchBonusType = MatchBonusType.ClearAllTilesOfSameColor;
-                        break;
-                    default:
-                        int matchSequenceSizeZeroBased = matchSequenceSize - 1;
-                        int startingIndex = i - matchSequenceSizeZeroBased;
-                        matchedTileCoordinates = SetLineMatch(matchSequenceSize, startingIndex, fixedCoordinateValue, isHorizontalLine);
-                        matchModel.MatchBonusType = MatchBonusType.None;
                         break;
                 }
                 matchModel.MatchedTiles = matchedTileCoordinates;
