@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.DesafioMatch3.Views.MatchBonus;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,7 +51,10 @@ namespace Gazeus.DesafioMatch3.Views
                 }
 
                 sequence.PrependCallback(() =>
-                    Instantiate(bonusModel.MatchBonusViewPrefab, effectCenterTileSpotTransform));
+                {
+                    MatchBonusView matchBonusView = Instantiate(bonusModel.MatchBonusViewPrefab, effectCenterTileSpotTransform);
+                    matchBonusView.SetupAndPlay(matchModel, tileSpots);
+                });
             }
 
             sequence.Append(DOVirtual.DelayedCall(0.2f, () => { }));
