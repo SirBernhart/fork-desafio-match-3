@@ -88,10 +88,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2b024046f32169eba9dec3868c751c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusDestroyAllOfSameColorAnimation
-  _endScale: 3
+  _vfxDuration: 1
   _fadeOutStart: 0.5
   _fadeOutDuration: 0.2
-  _image: {fileID: 7605089940261204792}
+  _vfxImage: {fileID: 0}
+  angle1: 90
+  angle2: -90
 --- !u!1001 &3197086955509173333
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -194,10 +196,36 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3635314243788045155, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5564826706251686988}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5930507644971192787, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7772238049023373945}
   m_SourcePrefab: {fileID: 100100000, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
 --- !u!224 &2174515892599109430 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3635314243788045155, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
   m_PrefabInstance: {fileID: 3197086955509173333}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &9084658670068292998 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5930507644971192787, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
+  m_PrefabInstance: {fileID: 3197086955509173333}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7772238049023373945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084658670068292998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b024046f32169eba9dec3868c751c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusDestroyAllOfSameColorAnimation
+  _vfxDuration: 1
+  _fadeOutStart: 0.5
+  _fadeOutDuration: 0.2
+  _vfxImage: {fileID: 7605089940261204792}
+  angle1: 90
+  angle2: -90

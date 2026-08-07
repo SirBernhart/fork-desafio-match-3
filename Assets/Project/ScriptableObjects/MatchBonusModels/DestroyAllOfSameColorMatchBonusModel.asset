@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: DestroyAllOfSameColorMatchBonusModel
   m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusModel
   _type: 400
-  _matchBonusViewPrefab: {fileID: 5607011532006863230, guid: 5db3c7c48ccbccd56b5236382b0f7572, type: 3}
+  _matchBonusViewPrefab: {fileID: 7772238049023373945, guid: 5db3c7c48ccbccd56b5236382b0f7572, type: 3}

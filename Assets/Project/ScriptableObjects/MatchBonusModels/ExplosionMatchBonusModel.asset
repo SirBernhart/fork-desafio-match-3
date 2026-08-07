@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ExplosionMatchBonusModel
   m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusModel
   _type: 300
-  _matchBonusViewPrefab: {fileID: 4531599006649606947, guid: dfe0054de15ca9dbdbd7c2eb3639df36, type: 3}
+  _matchBonusViewPrefab: {fileID: 2227796733285990638, guid: dfe0054de15ca9dbdbd7c2eb3639df36, type: 3}

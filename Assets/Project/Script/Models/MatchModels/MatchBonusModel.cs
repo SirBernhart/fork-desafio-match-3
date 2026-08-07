@@ -1,4 +1,5 @@
 using Gazeus.DesafioMatch3.Models;
+using Gazeus.DesafioMatch3.Views.MatchBonus;
 using UnityEngine;
 
 namespace Gazeus.DesafioMatch3
@@ -10,6 +11,6 @@ namespace Gazeus.DesafioMatch3
         [SerializeField] private MatchBonusView _matchBonusViewPrefab;
         
         public MatchBonusType BonusType => _type;
-        public GameObject MatchBonusViewPrefab => _matchBonusViewPrefab.gameObject;
+        public MatchBonusView MatchBonusViewPrefab => _matchBonusViewPrefab;
     }
 }

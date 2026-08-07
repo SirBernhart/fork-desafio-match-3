@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: HorizontalClearLineMatchBonusModel
   m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusModel
   _type: 100
-  _matchBonusViewPrefab: {fileID: 6152220976859078346, guid: 0886b9ac1830afe84b8a6b1f6758af29, type: 3}
+  _matchBonusViewPrefab: {fileID: 2501636263123007981, guid: 0886b9ac1830afe84b8a6b1f6758af29, type: 3}

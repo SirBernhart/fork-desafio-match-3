@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 160917104654752660}
   - component: {fileID: 1125260433836787082}
   - component: {fileID: 2755655067546062921}
-  - component: {fileID: 1856028599535122190}
   m_Layer: 5
-  m_Name: ExplosionAnimation
+  m_Name: vfx
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,21 +75,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1856028599535122190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6054305435324856424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e79b8413be651d93a6ca9b510c6c0ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusExplosionAnimation
-  _endScale: 3
-  _scaleUpduration: 0.5
-  _fadeOutDuration: 0.2
 --- !u!1001 &6876213414385786376
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -193,8 +177,34 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3635314243788045155, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
       insertIndex: -1
       addedObject: {fileID: 160917104654752660}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5930507644971192787, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2227796733285990638}
   m_SourcePrefab: {fileID: 100100000, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
+--- !u!1 &945847056659025883 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5930507644971192787, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
+  m_PrefabInstance: {fileID: 6876213414385786376}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2227796733285990638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945847056659025883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e79b8413be651d93a6ca9b510c6c0ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DesafioMatch3::Gazeus.DesafioMatch3.MatchBonusExplosionAnimation
+  _vfxDuration: 1
+  _endScale: 3
+  _scaleUpduration: 0.5
+  _fadeOutStartTime: 0.25
+  _fadeOutDuration: 0.2
+  _explosionImage: {fileID: 2755655067546062921}
 --- !u!224 &7862735882646381931 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3635314243788045155, guid: 1995e8fea0c8822a09194007170ae692, type: 3}
